@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Weather App</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js"></script>
+</head>
+
+<body>
+    
+    <button id="startSpeechRecognition" class="button">Start Speech Recognition</button>
+    <button id="speakButton" class="button">Get Weather</button>
+    <main class="container">
+        <input list="cities" type="search" name="search" id="search" placeholder="Search city" autocomplete="off">
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const speakButton = document.getElementById('speakButton');
+                const startSpeechRecognitionButton = document.getElementById('startSpeechRecognition');
+                const cityInput = document.getElementById('search');
+                const recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+
+                startSpeechRecognitionButton.addEventListener('click', () => {
+                    recognition.start();
+                });
+
+                recognition.onresult = (event) => {
+                    const speechResult = event.results[0][0].transcript;
+                    cityInput.value = speechResult;
+                    handleSearch();
+                };
+               
+                speakButton.addEventListener('click', async () => {
+                    try {
+                        //const apiKey = '998b93c79ab368096c33383406b8ad00';
+                        const city = search.value.trim();
+
+                        if (!city) {
+                            alert('Please enter a city.');
+                            return;
+                        }
+
+                        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;
+
+                        const response = await fetch(apiUrl);
+                        const data = await response.json();
+
+                        const weatherDescription = data.weather[0].description;
+                        const temperature = (data.main.temp - 273.1).toFixed(2);
+
+
+                        const weatherInfo = `The weather in ${city} is ${weatherDescription} with a temperature of ${temperature} degrees Celsius.`;
+
+                        const synth = window.speechSynthesis;
+                        const utterance = new SpeechSynthesisUtterance(weatherInfo);
+
+                        utterance.rate = 1;
+
+                        synth.speak(utterance);
+                    } catch (error) {
+                        console.error('Error fetching weather data:', error);
+                    }
+                });
+                function handleSearch() {
+                    const city = cityInput.value.trim();
+
+                    if (!city) {
+                        alert('Please enter a city.');
+                        return;
+                    }
+                }
+            });
+        </script>
+        <datalist id="cities">
+            <!-- <option value="pune"></option> -->
+            <!-- <option value="delhi"></option> -->
+        </datalist>
+
+        <article id="current-forecast">
+            <h1 class="city">City Name</h1>
+            <p class="temp">--</p>
+            <p class="description">Description</p>
+            <p class="min-max-temp">High Low </p>
+        </article>
+        <article id="hourly-forecast">
+            <h1>Hourly Forecast</h1>
+            <section class="hourly-container">
+                <article>
+                    <h3 class="time">Now</h3>
+                    <p class="icon"></p>
+                    <p class="hourly-temp">--</p>
+                </article>
+            </section>
+        </article>
+        <article id="five-day-forecast">
+            <h1>5 day Forecast</h1>
+            <section class="five-day-forecast-container">
+                <article class="day-wise-forecast">
+                    <h3>Today</h3>
+                    <p class="icon">--</p>
+                    <p class="min-temp">--</p>
+                    <p class="max-temp">--</p>
+                </article>
+                <article class="day-wise-forecast">
+                    <h3>Wed</h3>
+                    <p class="icon">--</p>
+                    <p class="min-temp">--</p>
+                    <p class="max-temp">--</p>
+                </article>
+            </section>
+        </article>
+        <article id="feels-like">
+            <h1>Feels </h1>
+            <p class="feels-like-temp">--</p>
+        </article>
+        <article id="humidity">
+            <h1>Humidity</h1>
+            <p class="humidity-value">--</p>
+        </article>
+    </main>
+
+    <script src="./main.js" async defer></script>
+</body>
+
+</html>
