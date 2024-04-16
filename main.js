@@ -177,7 +177,6 @@ const onSearchChange = async (event) => {
     for(let {lat , lon, name, state , country } of listOfCities ){
         options += `<option data-city-details= '${JSON.stringify({lat , lon, name})}' value="${name}, ${state}, ${country}"></option>` ;
     }
-    
     document.querySelector("#cities").innerHTML = options ; 
      
 
