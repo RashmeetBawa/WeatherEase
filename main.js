@@ -1,7 +1,5 @@
 let API_KEY = "ac6b7e9b9e17ca77b4ba5d724e290ae3" ; 
-
 const DAYS_OF_THE_WEEK = ["sun" , "mon" , "tue" , "wed" , "thu" , "fri" , "sat"] ; 
-
 let selectedCityText ; 
 let selectedCity ;
 
